@@ -1,0 +1,1557 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "DriveNow Rental — оркестратор",
+    "version": "1.0.0",
+    "description": "Точка зрения Rental: send команд, receive результатов. Владелец-участник указан x-owner. correlationId = rentalId. Отсутствие результата не является отказом."
+  },
+  "defaultContentType": "application/json",
+  "servers": {
+    "local": {
+      "host": "rabbitmq:5671",
+      "protocol": "amqp",
+      "protocolVersion": "0.9.1",
+      "description": "Логический адрес для будущего развёртывания; TLS и ACL обязательны"
+    }
+  },
+  "channels": {
+    "ReserveVehicle": {
+      "address": "fleet.ReserveVehicle.v1",
+      "messages": {
+        "ReserveVehicle": {
+          "$ref": "#/components/messages/ReserveVehicle"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "ReleaseVehicle": {
+      "address": "fleet.ReleaseVehicle.v1",
+      "messages": {
+        "ReleaseVehicle": {
+          "$ref": "#/components/messages/ReleaseVehicle"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "HoldDeposit": {
+      "address": "payment.HoldDeposit.v1",
+      "messages": {
+        "HoldDeposit": {
+          "$ref": "#/components/messages/HoldDeposit"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "ReleaseDeposit": {
+      "address": "payment.ReleaseDeposit.v1",
+      "messages": {
+        "ReleaseDeposit": {
+          "$ref": "#/components/messages/ReleaseDeposit"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "GrantAccess": {
+      "address": "access.GrantAccess.v1",
+      "messages": {
+        "GrantAccess": {
+          "$ref": "#/components/messages/GrantAccess"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "RevokeAccess": {
+      "address": "access.RevokeAccess.v1",
+      "messages": {
+        "RevokeAccess": {
+          "$ref": "#/components/messages/RevokeAccess"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "VehicleReserved": {
+      "address": "fleet.VehicleReserved.v1",
+      "messages": {
+        "VehicleReserved": {
+          "$ref": "#/components/messages/VehicleReserved"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "VehicleReservationRejected": {
+      "address": "fleet.VehicleReservationRejected.v1",
+      "messages": {
+        "VehicleReservationRejected": {
+          "$ref": "#/components/messages/VehicleReservationRejected"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "VehicleReleased": {
+      "address": "fleet.VehicleReleased.v1",
+      "messages": {
+        "VehicleReleased": {
+          "$ref": "#/components/messages/VehicleReleased"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "DepositHeld": {
+      "address": "payment.DepositHeld.v1",
+      "messages": {
+        "DepositHeld": {
+          "$ref": "#/components/messages/DepositHeld"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "DepositRejected": {
+      "address": "payment.DepositRejected.v1",
+      "messages": {
+        "DepositRejected": {
+          "$ref": "#/components/messages/DepositRejected"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "DepositUncertain": {
+      "address": "payment.DepositUncertain.v1",
+      "messages": {
+        "DepositUncertain": {
+          "$ref": "#/components/messages/DepositUncertain"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "DepositReleased": {
+      "address": "payment.DepositReleased.v1",
+      "messages": {
+        "DepositReleased": {
+          "$ref": "#/components/messages/DepositReleased"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "AccessGranted": {
+      "address": "access.AccessGranted.v1",
+      "messages": {
+        "AccessGranted": {
+          "$ref": "#/components/messages/AccessGranted"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "AccessRejected": {
+      "address": "access.AccessRejected.v1",
+      "messages": {
+        "AccessRejected": {
+          "$ref": "#/components/messages/AccessRejected"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "AccessUncertain": {
+      "address": "access.AccessUncertain.v1",
+      "messages": {
+        "AccessUncertain": {
+          "$ref": "#/components/messages/AccessUncertain"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    },
+    "AccessRevoked": {
+      "address": "access.AccessRevoked.v1",
+      "messages": {
+        "AccessRevoked": {
+          "$ref": "#/components/messages/AccessRevoked"
+        }
+      },
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ]
+    }
+  },
+  "operations": {
+    "sendReserveVehicle": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/ReserveVehicle"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/ReserveVehicle/messages/ReserveVehicle"
+        }
+      ]
+    },
+    "sendReleaseVehicle": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/ReleaseVehicle"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/ReleaseVehicle/messages/ReleaseVehicle"
+        }
+      ]
+    },
+    "sendHoldDeposit": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/HoldDeposit"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/HoldDeposit/messages/HoldDeposit"
+        }
+      ]
+    },
+    "sendReleaseDeposit": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/ReleaseDeposit"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/ReleaseDeposit/messages/ReleaseDeposit"
+        }
+      ]
+    },
+    "sendGrantAccess": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/GrantAccess"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/GrantAccess/messages/GrantAccess"
+        }
+      ]
+    },
+    "sendRevokeAccess": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/RevokeAccess"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/RevokeAccess/messages/RevokeAccess"
+        }
+      ]
+    },
+    "receiveVehicleReserved": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/VehicleReserved"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/VehicleReserved/messages/VehicleReserved"
+        }
+      ]
+    },
+    "receiveVehicleReservationRejected": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/VehicleReservationRejected"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/VehicleReservationRejected/messages/VehicleReservationRejected"
+        }
+      ]
+    },
+    "receiveVehicleReleased": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/VehicleReleased"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/VehicleReleased/messages/VehicleReleased"
+        }
+      ]
+    },
+    "receiveDepositHeld": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/DepositHeld"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/DepositHeld/messages/DepositHeld"
+        }
+      ]
+    },
+    "receiveDepositRejected": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/DepositRejected"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/DepositRejected/messages/DepositRejected"
+        }
+      ]
+    },
+    "receiveDepositUncertain": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/DepositUncertain"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/DepositUncertain/messages/DepositUncertain"
+        }
+      ]
+    },
+    "receiveDepositReleased": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/DepositReleased"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/DepositReleased/messages/DepositReleased"
+        }
+      ]
+    },
+    "receiveAccessGranted": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/AccessGranted"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/AccessGranted/messages/AccessGranted"
+        }
+      ]
+    },
+    "receiveAccessRejected": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/AccessRejected"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/AccessRejected/messages/AccessRejected"
+        }
+      ]
+    },
+    "receiveAccessUncertain": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/AccessUncertain"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/AccessUncertain/messages/AccessUncertain"
+        }
+      ]
+    },
+    "receiveAccessRevoked": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/AccessRevoked"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/AccessRevoked/messages/AccessRevoked"
+        }
+      ]
+    }
+  },
+  "components": {
+    "messages": {
+      "ReserveVehicle": {
+        "name": "ReserveVehicle",
+        "title": "ReserveVehicle",
+        "summary": "Команда для Fleet",
+        "x-owner": "Fleet",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "vehicleId": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "required": [
+                "vehicleId"
+              ]
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data",
+            "notAfter"
+          ]
+        }
+      },
+      "ReleaseVehicle": {
+        "name": "ReleaseVehicle",
+        "title": "ReleaseVehicle",
+        "summary": "Команда для Fleet",
+        "x-owner": "Fleet",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "vehicleId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "allocationId": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "required": [
+                "vehicleId"
+              ]
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data",
+            "notAfter"
+          ]
+        }
+      },
+      "HoldDeposit": {
+        "name": "HoldDeposit",
+        "title": "HoldDeposit",
+        "summary": "Команда для Payment",
+        "x-owner": "Payment",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "paymentMethodToken": {
+                  "type": "string"
+                },
+                "amountMinor": {
+                  "type": "integer",
+                  "const": 500000
+                },
+                "currency": {
+                  "type": "string",
+                  "const": "RUB"
+                }
+              },
+              "required": [
+                "paymentMethodToken",
+                "amountMinor",
+                "currency"
+              ]
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data",
+            "notAfter"
+          ]
+        }
+      },
+      "ReleaseDeposit": {
+        "name": "ReleaseDeposit",
+        "title": "ReleaseDeposit",
+        "summary": "Команда для Payment",
+        "x-owner": "Payment",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "holdOperationId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "holdOperationId"
+              ]
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data",
+            "notAfter"
+          ]
+        }
+      },
+      "GrantAccess": {
+        "name": "GrantAccess",
+        "title": "GrantAccess",
+        "summary": "Команда для Access",
+        "x-owner": "Access",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "vehicleId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "allocationId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "allocationEpoch": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "holdId": {
+                  "type": "string"
+                },
+                "validUntil": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "vehicleId",
+                "allocationId",
+                "allocationEpoch",
+                "holdId",
+                "validUntil"
+              ]
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data",
+            "notAfter"
+          ]
+        }
+      },
+      "RevokeAccess": {
+        "name": "RevokeAccess",
+        "title": "RevokeAccess",
+        "summary": "Команда для Access",
+        "x-owner": "Access",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "vehicleId": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "required": [
+                "vehicleId"
+              ]
+            },
+            "notAfter": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data",
+            "notAfter"
+          ]
+        }
+      },
+      "VehicleReserved": {
+        "name": "VehicleReserved",
+        "title": "VehicleReserved",
+        "summary": "Результат от Fleet",
+        "x-owner": "Fleet",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "vehicleId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "allocationId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "allocationEpoch": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "vehicleId",
+                "allocationId",
+                "allocationEpoch"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "VehicleReservationRejected": {
+        "name": "VehicleReservationRejected",
+        "title": "VehicleReservationRejected",
+        "summary": "Результат от Fleet",
+        "x-owner": "Fleet",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "UNAVAILABLE",
+                    "NOT_FOUND",
+                    "CANCELLED",
+                    "EXPIRED"
+                  ]
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "VehicleReleased": {
+        "name": "VehicleReleased",
+        "title": "VehicleReleased",
+        "summary": "Результат от Fleet",
+        "x-owner": "Fleet",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "vehicleId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "AVAILABLE",
+                    "OUT_OF_SERVICE"
+                  ]
+                }
+              },
+              "required": [
+                "vehicleId",
+                "status"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "DepositHeld": {
+        "name": "DepositHeld",
+        "title": "DepositHeld",
+        "summary": "Результат от Payment",
+        "x-owner": "Payment",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "holdId": {
+                  "type": "string"
+                },
+                "amountMinor": {
+                  "type": "integer",
+                  "const": 500000
+                },
+                "currency": {
+                  "type": "string",
+                  "const": "RUB"
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "holdId",
+                "amountMinor",
+                "currency",
+                "expiresAt"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "DepositRejected": {
+        "name": "DepositRejected",
+        "title": "DepositRejected",
+        "summary": "Результат от Payment",
+        "x-owner": "Payment",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "DECLINED",
+                    "TOKEN_INVALID",
+                    "CANCELLED",
+                    "EXPIRED"
+                  ]
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "DepositUncertain": {
+        "name": "DepositUncertain",
+        "title": "DepositUncertain",
+        "summary": "Результат от Payment",
+        "x-owner": "Payment",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "DepositReleased": {
+        "name": "DepositReleased",
+        "title": "DepositReleased",
+        "summary": "Результат от Payment",
+        "x-owner": "Payment",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "holdOperationId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "holdOperationId"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "AccessGranted": {
+        "name": "AccessGranted",
+        "title": "AccessGranted",
+        "summary": "Результат от Access",
+        "x-owner": "Access",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "sessionId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "effectiveAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "allocationId": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "required": [
+                "sessionId",
+                "effectiveAt",
+                "allocationId"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "AccessRejected": {
+        "name": "AccessRejected",
+        "title": "AccessRejected",
+        "summary": "Результат от Access",
+        "x-owner": "Access",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "EXPIRED",
+                    "CLOSED",
+                    "STALE_ALLOCATION",
+                    "INVALID_HOLD",
+                    "DEVICE_REFUSED"
+                  ]
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "AccessUncertain": {
+        "name": "AccessUncertain",
+        "title": "AccessUncertain",
+        "summary": "Результат от Access",
+        "x-owner": "Access",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      },
+      "AccessRevoked": {
+        "name": "AccessRevoked",
+        "title": "AccessRevoked",
+        "summary": "Результат от Access",
+        "x-owner": "Access",
+        "correlationId": {
+          "location": "$message.payload#/correlationId"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "correlationId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "causationId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "occurredAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "schemaVersion": {
+              "type": "integer",
+              "const": 1
+            },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "sessionId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "evidenceAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "sessionId",
+                "evidenceAt"
+              ]
+            }
+          },
+          "required": [
+            "messageId",
+            "correlationId",
+            "causationId",
+            "operationId",
+            "occurredAt",
+            "schemaVersion",
+            "data"
+          ]
+        }
+      }
+    }
+  }
+}

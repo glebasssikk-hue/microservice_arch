@@ -1,0 +1,35 @@
+flowchart TB
+  Driver["Person: Водитель"]
+  Operator["Person: Оператор"]
+  IdP["External System: Identity Provider\nOIDC, JWT"]
+  Bank["External System: Payment Provider\nХолды, поиск по ключу"]
+  Telematics["External System: Телематика + автомобиль\nВыдача/отзыв доступа, проверка операции"]
+  subgraph System["Software System: DriveNow"]
+    UI["Container: Web SPA\nTypeScript / браузер\nКаталог и статус запуска"]
+    R["Container: Rental\nJava / Spring Boot\nAPI аренды, Saga, таймеры"]
+    F["Container: Fleet\nJava / Spring Boot\nКаталог, исключительные выделения"]
+    P["Container: Payment\nJava / Spring Boot\nХолды, сверка"]
+    A["Container: Access\nJava / Spring Boot\nДоступ, результаты телематики"]
+    B["Container: RabbitMQ\nAMQP 0-9-1 / TLS\nКоманды и события"]
+    RD[("Container: Rental DB\nPostgreSQL")]
+    FD[("Container: Fleet DB\nPostgreSQL")]
+    PD[("Container: Payment DB\nPostgreSQL")]
+    AD[("Container: Access DB\nPostgreSQL")]
+  end
+  Driver -->|"HTTPS"| UI
+  UI -->|"OIDC / HTTPS"| IdP
+  UI -->|"HTTPS JSON / OpenAPI"| R
+  UI -->|"HTTPS JSON / OpenAPI"| F
+  R -->|"JWKS / HTTPS"| IdP
+  Operator -->|"Разбор по журналам; процедура поддержки"| R
+  R <-->|"AMQP команды/события"| B
+  F <-->|"AMQP команды/события"| B
+  P <-->|"AMQP команды/события"| B
+  A <-->|"AMQP команды/события"| B
+  R -->|"SQL/TLS"| RD
+  F -->|"SQL/TLS"| FD
+  P -->|"SQL/TLS"| PD
+  A -->|"SQL/TLS"| AD
+  P -->|"HTTPS JSON / адаптер провайдера"| Bank
+  A -->|"HTTPS JSON / адаптер телематики"| Telematics
+

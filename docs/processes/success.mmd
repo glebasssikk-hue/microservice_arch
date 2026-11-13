@@ -1,0 +1,28 @@
+sequenceDiagram
+  actor U as Водитель
+  participant R as Rental
+  participant F as Fleet
+  participant P as Payment
+  participant B as Банк
+  participant A as Access
+  participant T as Телематика
+  U->>R: POST /rentals + Idempotency-Key
+  R->>R: JWT, допуск, UNIQUE userId, Saga + Outbox
+  R-->>U: 202 rentalId, STARTING
+  R-->>F: ReserveVehicle
+  F->>F: Транзакция: исключительное выделение
+  F-->>R: VehicleReserved
+  R-->>P: HoldDeposit
+  P->>P: Сохранить operationId
+  P->>B: PUT /holds/{operationId}
+  B-->>P: HELD + holdId
+  P-->>R: DepositHeld
+  R-->>A: GrantAccess
+  A->>A: Сохранить сессию и operationId
+  A->>T: PUT /access-sessions/{sessionId}
+  T-->>A: GRANTED + effectiveAt
+  A-->>R: AccessGranted
+  R->>R: ACTIVE + startedAt, commit
+  U->>R: GET /rentals/{rentalId}
+  R-->>U: ACTIVE
+

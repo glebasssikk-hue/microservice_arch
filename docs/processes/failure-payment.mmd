@@ -1,0 +1,21 @@
+sequenceDiagram
+  participant R as Rental
+  participant F as Fleet
+  participant P as Payment
+  participant B as Банк
+  R-->>F: ReserveVehicle
+  F-->>R: VehicleReserved
+  R-->>P: HoldDeposit
+  P->>B: PUT /holds/{operationId}
+  B-->>P: REJECTED (окончательный отказ)
+  P-->>R: DepositRejected
+  R->>R: CANCELLING
+  Note over R,P: GrantAccess ещё не отправлялся
+  R-->>P: ReleaseDeposit
+  P->>P: Терминально закрыть намерение холда
+  P-->>R: DepositReleased
+  R-->>F: ReleaseVehicle
+  F->>F: Закрыть выделение, проверить пригодность
+  F-->>R: VehicleReleased
+  R->>R: CANCELLED
+

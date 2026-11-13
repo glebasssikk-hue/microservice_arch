@@ -1,0 +1,23 @@
+sequenceDiagram
+  participant R as Rental
+  participant Q as RabbitMQ
+  participant A as Access
+  participant T as Телематика
+  R->>R: Saga GRANTING + Outbox, commit
+  R-->>Q: GrantAccess
+  Q-->>A: GrantAccess
+  A->>T: PUT /access-sessions/{sessionId}
+  T-->>A: GRANTED
+  A->>A: Результат + Outbox, commit
+  Note over R: Сервис упал до обработки результата
+  A-->>Q: AccessGranted
+  Note over Q: Durable очередь сохраняет событие
+  Note over R: Перезапуск, восстановление Saga из БД
+  Q-->>R: AccessGranted
+  R->>R: Inbox + ACTIVE + startedAt, commit
+  R--xQ: ACK потерян
+  Q-->>R: Повтор AccessGranted
+  R->>R: Inbox обнаруживает дубль, без нового перехода
+  R-->>Q: ACK
+  Note over R: Если таймер уже начал отмену, выполняется RevokeAccess
+

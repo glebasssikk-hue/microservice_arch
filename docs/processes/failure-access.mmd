@@ -1,0 +1,29 @@
+sequenceDiagram
+  participant R as Rental
+  participant A as Access
+  participant T as Телематика
+  participant P as Payment
+  participant F as Fleet
+  Note over R,F: Машина выделена, депозит HELD
+  R-->>A: GrantAccess
+  A->>T: PUT /access-sessions/{sessionId}
+  T--xA: Ответ потерян
+  A-->>R: AccessUncertain
+  R->>R: CANCELLING, машину не освобождать
+  R-->>A: RevokeAccess
+  A->>T: POST /access-sessions/{sessionId}/revoke
+  alt Отзыв подтверждён, поездка не начата
+    T-->>A: CLOSED, поздний grant запрещён
+    A-->>R: AccessRevoked
+    R-->>P: ReleaseDeposit
+    P-->>R: DepositReleased
+    R-->>F: ReleaseVehicle
+    F-->>R: VehicleReleased
+    R->>R: CANCELLED
+  else Нет связи или машина движется
+    A-->>R: AccessUncertain
+    R->>R: Через 15 минут MANUAL_REVIEW
+    Note over R,F: Выделение и блокировка пользователя сохраняются
+    Note over A,T: Сверка продолжается, нет удалённого глушения
+  end
+

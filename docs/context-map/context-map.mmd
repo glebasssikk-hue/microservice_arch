@@ -1,0 +1,17 @@
+flowchart LR
+  User["Водитель"]
+  Identity["Внешний Identity Provider"]
+  Rental["Rental / Аренда\nПроцесс, допуск, Saga"]
+  Fleet["Fleet / Автопарк\nМашины, выделения"]
+  Payment["Payment / Платежи\nХолды, сверка"]
+  Access["Access / Телематика\nСессии доступа, результаты"]
+  Bank["Платёжный провайдер"]
+  Car["Телематическая платформа и автомобиль"]
+  User --> Rental
+  Rental -->|"Идентичность / OIDC"| Identity
+  Rental -->|"Customer → Supplier / команды и события"| Fleet
+  Rental -->|"Customer → Supplier / команды и события"| Payment
+  Rental -->|"Customer → Supplier / команды и события"| Access
+  Payment -->|"ACL / внешний API"| Bank
+  Access -->|"ACL / внешний API"| Car
+
